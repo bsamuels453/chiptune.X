@@ -1,4 +1,7 @@
-#pragma once //xxx does this even work lol
+#ifndef TONE_H
+#define	TONE_H
+
+const char num_notes = 34;
 
 const char notes[] = {
     ' ', //rest
@@ -73,3 +76,5 @@ const short tones[] = {
     622u,
     227
 };
+
+#endif
