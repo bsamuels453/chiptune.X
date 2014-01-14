@@ -1,4 +1,7 @@
-_main: CODE, 2034 0 4
-__initialization: CODE, 2045 0 0
-_init_osc: CODE, 2038 0 7
-Total: 11
+_notes: STRING, 8 0 34
+__stringtab: STRING, 2 0 6
+_main: CODE, 1925 0 11
+__initialization: CODE, 2034 0 11
+_init_osc: CODE, 1918 0 7
+_init_io: CODE, 1936 0 14
+Total: 83
