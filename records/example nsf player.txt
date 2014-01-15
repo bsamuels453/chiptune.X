@@ -1,0 +1,226 @@
+ ii. Example 6502 ASM Player
+ ---------------------------
+
+This is the sourcecode for a 6502 player which will play ripped NES music.  It
+was coded by Kevin Horton, and I converted it to DASM's format and added a
+graphical display and definable constants for INIT, PLAY, etc...  You can
+assemble it in the cross-platform cross-assembler DASM, using the option -f3,
+and by joining an iNES header, the ripped music code, and the assembled binary
+together.  It should in its present form, with header, ripped music, and
+binary, form a .NES file which is 32784 bytes large.  Press "start" to advance
+songs.
+
+
+;*BEGIN ASM FILE*
+
+int_en EQU #$0100
+sng_ctr EQU #$0101
+pv_btn EQU #$0102
+
+INIT_ADD EQU #$8003        ;INIT Address
+PLAY_ADD EQU #$8000        ;PLAY Address
+START_SONG EQU #$00        ;Starting Song
+MAX_SONG EQU #$FF          ;Maximum Number of Songs
+
+   PROCESSOR 6502
+
+;code
+
+   ORG $C000                ;Origin of player code
+
+.start    sei
+          cld
+          ldx #$ff
+          txs
+
+.w_vbi    lda $2002
+          bpl .w_vbi
+
+          lda #$0
+          tax
+
+.ci_lp    sta $0000,X
+          sta $0100,X
+          sta $0200,X
+          sta $0300,X
+          sta $0400,X
+          sta $0500,X
+          sta $0600,X
+          sta $0700,X
+          inx
+          bne .ci_lp     ;clear RAM
+
+          lda #$80
+          sta $2000
+          lda #$00
+          sta $2001  ;set up PPU for interrupts, disable screen
+
+          lda #$00
+          sta $2006
+          sta $2006
+          tax
+.PATCLR   sta $2007        ;Clear char 0 in ppu.
+          inx
+          cpx #$10
+          bne .PATCLR
+
+
+          lda #$01
+          sta $2006
+          lda #$00
+          sta $2006     ;Point to $0100 in PPU
+
+          ldx #$00
+          ldy #$00
+.PATLoad  lda .PAT,X
+          sta $2007
+          inx
+          iny
+          cpy #$08      ;Save 8 bytes.
+          bne .PATLoad
+          ldy #$00
+          sty $2007     ;Save blank gfx.
+          sty $2007
+          sty $2007
+          sty $2007
+          sty $2007
+          sty $2007
+          sty $2007
+          sty $2007
+          cpx #$80
+          bne .PATLoad
+
+          lda #$3F
+          sta $2006
+          lda #$00
+          sta $2006
+          lda #$0E
+          sta $2007
+          lda #$30
+          sta $2007     ;Set up Palette
+
+          lda #$00
+          sta sng_ctr
+
+          lda #%00001110
+          sta $2001
+
+          lda #START_SONG         ;Start Song
+          sta sng_ctr
+          jsr INIT_ADD     ;init tune
+          LDA #$01
+          sta int_en
+
+.k_loop   jsr .r_btn
+          and #$10
+          beq .k_loop
+
+          inc sng_ctr
+          LDA #MAX_SONG         ;Max Song.
+          cmp sng_ctr
+          bne .no_scr
+          lda #$0
+          sta sng_ctr
+
+.no_scr   lda #$0
+          sta int_en
+          lda sng_ctr
+          jsr INIT_ADD
+          lda #$01
+          sta int_en
+          jmp .k_loop    ;check button, if pressed inc song # and re-init
+
+
+.interrupt pha
+           txa
+           pha
+           tya
+           pha
+
+           lda #$20
+           sta $2006
+           sta $2006       ;Point to Name Table
+
+           lda sng_ctr
+           lsr
+           lsr
+           lsr
+           lsr
+           ora #$10        ;Point to right chr.
+           sta $2007
+           lda sng_ctr
+           and #$0F
+           ora #$10
+           sta $2007
+
+           lda #$00
+           sta $2006
+           sta $2006
+           sta $2005
+           sta $2005
+
+           lda int_en
+           beq .no_ints
+           jsr PLAY_ADD    ;play tune
+
+.no_ints   pla
+           tay
+           pla
+           tax
+           pla
+           rti
+
+.r_btn     ldy #$08      ;read keypad
+           ldx #$01
+           stx $4016
+           dex
+           stx $4016
+
+.r_bit     lda $4016
+           ROR
+           txa
+           ROL
+           tax
+           dey
+           bne .r_bit
+
+           cmp pv_btn
+           beq .no_chg
+           sta pv_btn
+           rts
+
+.no_chg    lda #$0
+           rts
+
+.PAT dc.b  #$38,#$4C,#$C6,#$C6,#$C6,#$64,#$38,#$00
+     dc.b  #$18,#$38,#$18,#$18,#$18,#$18,#$7E,#$00
+     dc.b  #$7C,#$C6,#$0E,#$3C,#$78,#$E0,#$FE,#$00
+     dc.b  #$7E,#$0C,#$18,#$3C,#$06,#$C6,#$7C,#$00
+     dc.b  #$1C,#$3C,#$6C,#$CC,#$FE,#$0C,#$0C,#$00
+     dc.b  #$FC,#$C0,#$FC,#$06,#$06,#$C6,#$7C,#$00
+     dc.b  #$3C,#$60,#$C0,#$FC,#$C6,#$C6,#$7C,#$00
+     dc.b  #$FE,#$C6,#$0C,#$18,#$30,#$30,#$30,#$00
+     dc.b  #$7C,#$C6,#$C6,#$7C,#$C6,#$C6,#$7C,#$00
+     dc.b  #$7C,#$C6,#$C6,#$7E,#$06,#$0C,#$78,#$00
+     dc.b  #$38,#$6C,#$C6,#$C6,#$FE,#$C6,#$C6,#$00
+     dc.b  #$FC,#$C6,#$C6,#$FC,#$C6,#$C6,#$FC,#$00
+     dc.b  #$3C,#$66,#$C0,#$C0,#$C0,#$66,#$3C,#$00
+     dc.b  #$F8,#$CC,#$C6,#$C6,#$C6,#$CC,#$F8,#$00
+     dc.b  #$FE,#$C0,#$C0,#$FC,#$C0,#$C0,#$FE,#$00
+     dc.b  #$FE,#$C0,#$C0,#$FC,#$C0,#$C0,#$C0,#$00
+
+;fill empty space
+
+    ORG $FFFA,0
+
+;vectors
+
+ dc.w .interrupt
+ dc.w .start
+ dc.w .interrupt
+
+;*END ASM FILE*
+-- 
+Chris Covell (ccovell@direct.ca)
+http://mypage.direct.ca/c/ccovell/
+Solar Wars Homepage!
