@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define _XTAL_FREQ 500000
 #include <xc.h>
+
 #include "main.h"
 #include "tone.h"
 #include "song.h"
@@ -15,12 +17,9 @@ int main(int argc, char** argv) {
     init_io();
     init_timers();
     play_tune();
-    while(1){
-        play_note('g', 10);
-        sig_uptime = 0;
-        sig_period = 0;
-        delay(10);
-    }
+    sig_uptime = 0;
+    sig_period = 0;
+    for(;;);
     return (EXIT_SUCCESS);
 }
 
@@ -38,14 +37,15 @@ void play_tune(){
 }
 
 void delay(char beats){
-    float delay_time_sec = ((float)beats/10f) * (1f/(float)tempo) * 60;
-    char delay_instructs = (char)(delay_time_sec * (INSTRUCT_SPEED)/256f);
+    float realBeats = (float)beats/10f;
+    float delay_time_sec = realBeats * (60f/(float)tempo);
+    int delay_ms = (int)(delay_time_sec * 1000f);
 
-    OPTION_REGbits.PS = 0b111;
-    INTCONbits.T0IF = 0;
-    TMR0 = 0xFF - delay_instructs;
-    while(INTCONbits.T0IF != 1);
+    for(int i=0; i<delay_ms; i+=1){
+        __delay_ms(1);
+    }
 }
+
 
 void play_note(char note, char duration){
     float frequency;
@@ -56,7 +56,7 @@ void play_note(char note, char duration){
         }
     }
     float time_high_s = 1f / (2 * frequency);
-    int period = (int)(time_high_s * INSTRUCT_SPEED);
+    int period = (int)(INSTRUCT_SPEED/(1/time_high_s));
     sig_uptime = 0xFFFF - period;
     sig_period = time_high_s;
     delay(duration);

@@ -22,7 +22,7 @@ void init_io(){
 void init_osc(){
     OSCCONbits.SCS = 1;//use internal osc for sys clock
     OSCCONbits.HTS = 1;//hfq osc is
-    OSCCONbits.IOSCF = 0b110; //f_osc = 250khz
+    OSCCONbits.IOSCF = 0b110;
     // 111 = 8mhz
     // 110 = 4mhz
     // 101 = 2mhz
