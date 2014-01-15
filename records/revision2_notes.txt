@@ -1,0 +1,7 @@
+NSF format operates using 4 sound channels, 2 pulse channels, 1 triangle, and 1 noise channel
+
+find out: 
+	-what kind of bit resolution do these channels have
+	-how are these channels controlled
+	-what are the maximum and minimum frequency these channels can operate at
+	-can these channels operate at independent frequencies
