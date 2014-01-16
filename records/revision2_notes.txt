@@ -8,6 +8,9 @@ find out:
 	X can these channels operate at independent frequencies
 		--channels operate at independent frequencies
 		--each channel is clocked using a 13 bit timer
+		--each channel has its own DAC
+		
+-channels only play their waveform when their length-counters are not 0 (doesnt apply to pulse)
 	
 r2 ladder
 http://www.digikey.com/product-detail/en/4610X-R2R-103LF/4610X-R2R-103LF-ND/3787967

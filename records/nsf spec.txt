@@ -36,6 +36,11 @@ the tune.
 
 Here's an overview of the header:
 
+//load address: 0x80
+//init address: 0x380
+//play address: 0x80
+//speed: 0x1a41
+
 offset  # of bytes   Function
 ----------------------------
 
