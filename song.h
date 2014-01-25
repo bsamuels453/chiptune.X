@@ -2,7 +2,7 @@
 #define	SONG_H
 
 const unsigned char tempo = 95;
-const unsigned long song_length = 295;
+const unsigned long song_length = 293;
 
 const char song[] = "EE E CE G  g  C  g e  a b ia gEGA FG E CDb C  g e  a b ia gEGA FG E CDb  GNFR E uaC aCD GNFR E 1 11   GNFR E uaC aCD L  D C   CC C CD EC ag  CC C CDE  CC C CD EC ag  EE E CE G  g  C  g e  a b ia gEGA FG E CDb C  g e  a b ia gEGA FG E CDb EC g u aF Fa  bAAAGFEC ag  EC g u aF Fa  bF FFEDCe ec  ";
 const char beats[] = {
