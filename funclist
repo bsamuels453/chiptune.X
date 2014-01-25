@@ -5,20 +5,21 @@ _beats: STRCODE, 568 0 293
 ___ftpack: CODE, 3990 0 106
 _song: STRCODE, 274 0 294
 _song_length: STRCODE, 963 0 4
-_main: CODE, 200 0 23
+_main: CODE, 171 0 29
 __initialization: CODE, 19 0 7
-___lbtoft: CODE, 171 0 29
+___lbtoft: CODE, 200 0 29
 _int_t1: CODE, 1956 0 41
 _num_notes: STRCODE, 967 0 1
-_init_timers: CODE, 223 0 18
-_init_osc: CODE, 241 0 9
+_init_timers: CODE, 229 0 18
+_init_osc: CODE, 247 0 9
 _play_note: CODE, 969 0 298
 ___ftmul: CODE, 1267 0 210
 ___awtoft: CODE, 1997 0 36
-_init_io: CODE, 2033 0 14
+_wait_for_trig: CODE, 3985 0 5
+_init_io: CODE, 2033 0 15
 _tempo: STRCODE, 968 0 1
 _tones: STRCODE, 861 0 68
 _play_tune: CODE, 1660 0 148
 ___fttol: CODE, 29 0 142
 ___ftdiv: CODE, 1477 0 183
-Total: 2125
+Total: 2137

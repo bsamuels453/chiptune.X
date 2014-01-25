@@ -8,6 +8,7 @@
 #pragma config IESO = OFF       // Internal External Switchover bit (Internal External Switchover mode is disabled)
 #pragma config FCMEN = ON       // Fail-Safe Clock Monitor Enabled bit (Fail-Safe Clock Monitor is enabled)
 
+void wait_for_trig();
 void play_note(char note, char duration);
 void delay(char beats);
 void play_tune();

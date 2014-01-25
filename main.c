@@ -13,14 +13,21 @@ static float sig_period = 0;
 #define INSTRUCT_SPEED 1000000
 
 int main(int argc, char** argv) {
-    init_osc();
-    init_io();
-    init_timers();
-    play_tune();
-    sig_uptime = 0;
-    sig_period = 0;
-    for(;;);
+    while(1){
+        init_osc();
+        init_io();
+        init_timers();
+        wait_for_trig();
+        play_tune();
+        PORTAbits.RA2 = 0;
+        sig_uptime = 0;
+        sig_period = 0;
+    }
     return (EXIT_SUCCESS);
+}
+
+void wait_for_trig(){
+    while(PORTCbits.RC5 != 1);
 }
 
 void play_tune(){

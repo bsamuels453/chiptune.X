@@ -15,6 +15,7 @@ void init_timers(){
 void init_io(){
     CMCON0bits.CM = 0b111;//disable comparators
     TRISAbits.TRISA2 = 0;//output
+    TRISCbits.TRISC5 = 1;
     PORTAbits.RA2 = 0;
     ANSELbits.ANS2 = 0;//digital
 }
