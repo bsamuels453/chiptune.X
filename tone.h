@@ -74,7 +74,7 @@ const short tones[] = {
     415, //g#_4
     1046,//c_6
     622u,//d#_5
-    227  //wut
+    965
 };
 
 #endif
